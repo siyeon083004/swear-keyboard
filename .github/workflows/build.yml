@@ -7,7 +7,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: unzip -o SwearKeyboard.zip
+        with:
+          fetch-depth: 0
+      - name: 제일 최근에 올린 zip 풀기
+        run: |
+          f=$(git log --format= --name-only --diff-filter=AM -- '*.zip' | grep -v '^$' | head -1)
+          [ -z "$f" ] && f=SwearKeyboard.zip
+          echo "사용하는 파일: $f"
+          rm -rf SwearKeyboard
+          unzip -o "$f"
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
